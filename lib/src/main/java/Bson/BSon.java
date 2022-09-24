@@ -35,13 +35,12 @@ public class BSon {
 
 		Object obj = cls.getDeclaredConstructor().newInstance();
 		Method[] methodArr = obj.getClass().getDeclaredMethods();
-		String o = "USER";
-		System.out.println(getJsonPath(o));
-		System.out.println(methodArr[0].invoke(o));
+		System.out.println(getJsonPath("USER"));
+		System.out.println(methodArr[0].invoke(obj));
 
 		// TODO
 		// obj의 타입을 통해 JSON 가져오기
-		String jsonPath = this.getJsonPath(cls.getClass().toString());
+		String jsonPath = this.getJsonPath(methodArr[0].invoke(obj).toString());
 		String json = this.getJsonFile(jsonPath);
 
 //		JSONObject jsonObj = new JSONObject();
@@ -49,7 +48,7 @@ public class BSon {
 //		JSONParser jsonParser = new JSONParser();
 //		JSONObject jsonObject = (JSONObject) jsonParser.parse(String.valueOf(cls));
 //		System.out.println(jsonObject);
-		return obj;
+		return json;
 	}
 
 	// toJSON에 JSON(resource)를 넣어서 실행 --> Object로 변환

@@ -22,7 +22,7 @@ public class Application {
 			}
 
 //			Class<?> bson = Class.forName("Bson.BSon");
-//			Method[] bsonMethod = bson.getDeclaredMethods();
+//			Method[] bsonMethod = bson.getClass().getDeclaredMethods();
 
 			Bitcoin bitcoin = new Bitcoin();
 
@@ -33,11 +33,11 @@ public class Application {
 			BSon bson = new BSon();
 
 			System.out.println(bitcoin.getType());
-			System.out.println(Bitcoin.class);
-			System.out.println(bson.parse(Bitcoin.class));
+			System.out.println(Bitcoin.class.getTypeName());
+			System.out.println(bson.parse(bitcoin.getClass()));
 
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
