@@ -1,11 +1,13 @@
 package Bson;
 
-import org.json.simple.JSONObject;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 
 public class BSon {
-	public String getJsonPath(String key) {
+	private String getJsonPath(String key) {
 		HashMap<String, String> jsonPath = new HashMap<String, String>();
 		jsonPath.put("BITCOIN", "./lib/src/main/resources/Bitcoin.json");
 		jsonPath.put("ETHEREUM", "./lib/src/main/resources/Ethereum.json");
@@ -14,14 +16,35 @@ public class BSon {
 		return jsonPath.get(key);
 	}
 
+	private String getJsonFile(String filePath) {
+		String json = null;
+
+		try {
+			json = new String(Files.readAllBytes(Paths.get(filePath)));
+		} catch (Exception except) {
+			except.printStackTrace();
+		}
+
+		return json;
+	}
 
 	// parse 메서드를 model을 넣어서 실행 --> model에 값이 들어가야 함
 	// model.getType을 이용해 어떤 모델인지 판단
 	public Object parse(Class<?> cls) throws Exception {
-		Object obj = cls.getDeclaredConstructor().newInstance();
-		// TODO
+		// model을 cls로 주입하여 인스턴스 생성하기
 
-		JSONObject jsonObj = new JSONObject();
+		Object obj = cls.getDeclaredConstructor().newInstance();
+		Method[] methodArr = obj.getClass().getDeclaredMethods();
+		String o = "USER";
+		System.out.println(getJsonPath(o));
+		System.out.println(methodArr[0].invoke(o));
+
+		// TODO
+		// obj의 타입을 통해 JSON 가져오기
+		String jsonPath = this.getJsonPath(cls.getClass().toString());
+		String json = this.getJsonFile(jsonPath);
+
+//		JSONObject jsonObj = new JSONObject();
 
 //		JSONParser jsonParser = new JSONParser();
 //		JSONObject jsonObject = (JSONObject) jsonParser.parse(String.valueOf(cls));

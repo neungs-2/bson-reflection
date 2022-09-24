@@ -33,6 +33,7 @@ public class Application {
 			BSon bson = new BSon();
 
 			System.out.println(bitcoin.getType());
+			System.out.println(Bitcoin.class);
 			System.out.println(bson.parse(Bitcoin.class));
 
 		} catch (ClassNotFoundException e) {
