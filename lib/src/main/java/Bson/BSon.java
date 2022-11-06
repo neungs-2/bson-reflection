@@ -1,12 +1,11 @@
 package Bson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.parser.JSONParser;
 
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
 
 public class BSon {
 	private String getJsonPath(String key) {
@@ -18,8 +17,9 @@ public class BSon {
 		return jsonPath.get(key);
 	}
 
-	private String getJsonFile(String filePath) {
-		String json = null;
+	private String getJsonFile(String key) {
+		String json = "";
+		String filePath = this.getJsonPath(key);
 
 		try {
 			json = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -32,27 +32,39 @@ public class BSon {
 
 	// parse 메서드를 model을 넣어서 실행 --> model에 값이 들어가야 함
 	// model.getType을 이용해 어떤 모델인지 판단
-	public Object parse(Class<?> cls) throws Exception {
+	// TODO: param에 필요한 값 넣어주기 (ex: parse에 String (JSON) 넣기)
+	public Object parse(Class<?> cls, String key) throws Exception {
 		// model을 cls로 주입하여 인스턴스 생성하기
-		String jsonPath;
-		String json = "";
+		String json = this.getJsonFile(key);
+		Object result = null;
+		try {
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(json);
+			System.out.println(obj);
 
+			ObjectMapper mapper = new ObjectMapper();
+			result = mapper.readValue(json, cls);
+			System.out.println(result);
+		} catch (Exception except) {
+			except.printStackTrace();
+		}
 
-		Object obj = cls.getDeclaredConstructor().newInstance();
-		Method[] methodArr = obj.getClass().getDeclaredMethods();
+		return result;
+//		Object obj = cls.getDeclaredConstructor().newInstance();
+//		Method[] methodArr = obj.getClass().getDeclaredMethods();
 //		Field[] fieldArr = obj.getClass().getDeclaredField();
 //		System.out.println(getJsonPath("USER"));
 //		System.out.println(methodArr[0].invoke(obj));
 
 		// TODO
 		// obj의 타입을 통해 JSON 가져오기
-		try{
-			for(int i = 0; i < methodArr.length; i++) {
-				if (methodArr[i].getName().equals("getType")) {
-					jsonPath = this.getJsonPath(methodArr[0].invoke(obj).toString());
-					json = this.getJsonFile(jsonPath);
-				}
-			}
+//		try{
+//			for(int i = 0; i < methodArr.length; i++) {
+//				if (methodArr[i].getName().equals("getType")) {
+//					jsonPath = this.getJsonPath(methodArr[0].invoke(obj).toString());
+//					json = this.getJsonFile(jsonPath);
+//				}
+//			}
 
 			// TODO: 직접 구현하고 싶다면 field에 JSON 값 직접 할당하는 코드 작성
 //			for(int i = 0; i < fieldArr.length; i++) {
@@ -60,11 +72,10 @@ public class BSon {
 //			}
 
 
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		Object result = mapper.readValue(json, cls);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+
 
 
 //		JSONObject jsonObj = new JSONObject();
@@ -72,7 +83,6 @@ public class BSon {
 //		JSONParser jsonParser = new JSONParser();
 //		JSONObject jsonObject = (JSONObject) jsonParser.parse(String.valueOf(cls));
 //		System.out.println(jsonObject);
-		return result;
 	}
 
 	// toJSON에 JSON(resource)를 넣어서 실행 --> Object로 변환
