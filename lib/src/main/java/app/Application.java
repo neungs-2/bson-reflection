@@ -33,8 +33,8 @@ public class Application {
 				System.out.println(field + ": " + jsonObj.get(field));
 			}
 
-			// JSONObject를 JSON으로 변환
-			System.out.println("\n\n========= JSON =========\n\n");
+			// JSONObject를 JSON으로 변
+			System.out.println("\n========= JSON =========");
 			Object json = bsonMethod[3].invoke(bsonInstance, jsonObj);
 			System.out.println(json);
 
