@@ -24,7 +24,6 @@ public class BSon {
 		try {
 			json = new String(Files.readAllBytes(Paths.get(filePath)));
 		} catch (Exception except) {
-			System.out.println(except);
 			except.printStackTrace();
 		}
 
@@ -45,7 +44,6 @@ public class BSon {
 			JSONObject jsonObj = (JSONObject) parser.parse(json);
 			return jsonObj;
 		} catch (Exception except) {
-			System.out.println(except);
 			except.printStackTrace();
 		}
 
