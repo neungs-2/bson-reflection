@@ -1,44 +1,33 @@
 package app;
 
-import org.json.simple.JSONObject;
+import Bson.BSon;
+import model.User;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class Application {
 	public static void main(String[] args) {
 		System.out.println("\n\n@@@@@@@@@@@@@@@@@ Main Method Now Start. @@@@@@@@@@@@@@@@@@\n");
 
 		try {
-			String className = "Bitcoin";
+//			String key = Coin.Type.BITCOIN.toString();
+			String key = User.Type.USER.toString();
+			String className = key.charAt(0) + key.substring(1).toLowerCase();
 
-			Class<?> bson = Class.forName("Bson.BSon");
-			Object bsonInstance = bson.getDeclaredConstructor().newInstance();
-			Method[] bsonMethod = bson.getDeclaredMethods();
+			BSon bson = new BSon();
+			String jsonResource = bson.getJsonFile(key);
 
-			Class<?> model = Class.forName("model." + className);
-			Object modelInstance = model.getDeclaredConstructor().newInstance();
-			Method modelMethod = model.getDeclaredMethod("getType");
-			Field[] jsonFields = model.getDeclaredFields();
-
-			// JSON 파일을 JSONObject로 파싱
-			String key  = modelMethod.invoke(modelInstance).toString();
-			JSONObject jsonObj = (JSONObject) bsonMethod[0].invoke(bsonInstance, bson, key);
+			Class<?> cls = Class.forName("model." + className);
+			HashMap parsedObj = (HashMap) bson.parse(cls, jsonResource);
+			String json = bson.toJSON(parsedObj);
 
 			System.out.println("=========" + className + "=========");
+			System.out.println(parsedObj);
 
-			for (int i = 0; i < jsonFields.length; i++) {
-				String[] fieldNameArr = jsonFields[i].toString().split("\\b.\\b");
-				String field = fieldNameArr[fieldNameArr.length - 1];
-				System.out.println(field + ": " + jsonObj.get(field));
-			}
-
-			// JSONObject를 JSON으로 변환
 			System.out.println("\n========= JSON =========");
-			Object json = bsonMethod[3].invoke(bsonInstance, jsonObj);
 			System.out.println(json);
-
-
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("className 변수에 올바른 값을 할당해주세요.\n\n");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
