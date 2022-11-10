@@ -5,7 +5,7 @@ public class User {
     public int age;
     public String addr;
 
-    enum Type {
+    public enum Type {
         USER
     }
     public Type getType() {
