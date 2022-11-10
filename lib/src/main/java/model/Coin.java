@@ -1,7 +1,7 @@
 package model;
 
 public abstract class Coin {
-    enum Type {
+    public enum Type {
         NONE, BITCOIN, ETHEREUM
     }
 
